@@ -40,6 +40,7 @@ function Baganator.ItemButtonUtil.UpdateSettings()
 
   iconSettings = {
     markJunk = Baganator.Config.Get("icon_grey_junk"),
+    qualityGlow = Baganator.Config.Get("icon_quality_glow"),
   }
 
   local useQualityColors = Baganator.Config.Get("icon_text_quality_colors")
@@ -384,6 +385,22 @@ local function FlashItemButton(self)
   end)
 end
 
+local function UpdateForGlow(self, quality)
+  if iconSettings.qualityGlow and quality and quality > (LE_ITEM_QUALITY_COMMON or Enum.ItemQuality.Common) then
+    self.IconBorder:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
+    self.IconBorder:SetBlendMode("ADD")
+    if Baganator.Constants.IsRetail then
+      self.IconBorder:SetSize(70/37 * self:GetWidth(), 70/37 * self:GetHeight())
+    end
+  else
+    self.IconBorder:SetTexture("Interface\\Common\\WhiteIconFrame")
+    self.IconBorder:SetBlendMode("BLEND")
+    if Baganator.Constants.IsRetail then
+      self.IconBorder:SetSize(self:GetWidth(), self:GetHeight())
+    end
+  end
+end
+
 BaganatorRetailCachedItemButtonMixin = {}
 
 function BaganatorRetailCachedItemButtonMixin:UpdateTextures(size)
@@ -395,6 +412,7 @@ function BaganatorRetailCachedItemButtonMixin:SetItemDetails(details)
 
   self:SetItemButtonTexture(details.iconTexture)
   self:SetItemButtonQuality(details.quality)
+  UpdateForGlow(self, details.quality)
   self:SetItemButtonCount(details.itemCount)
   SetItemCraftingQualityOverlay(self, details.itemLink)
 
@@ -528,6 +546,7 @@ function BaganatorRetailLiveItemButtonMixin:SetItemDetails(cacheData)
 
   local doNotSuppressOverlays = false;
   SetItemButtonQuality(self, quality, itemLink, doNotSuppressOverlays, isBound);
+  UpdateForGlow(self, quality)
 
   SetItemButtonCount(self, itemCount);
   SetItemButtonDesaturated(self, locked);
@@ -609,6 +628,7 @@ function BaganatorClassicCachedItemButtonMixin:SetItemDetails(details)
   SetItemButtonTexture(self, details.iconTexture or self.emptySlotFilepath);
   SetItemButtonQuality(self, details.quality); -- Doesn't do much
   ApplyQualityBorderClassic(self, details.quality)
+  UpdateForGlow(self, details.quality)
   SetItemButtonCount(self, details.itemCount);
 
   SetStaticInfo(self, details)
@@ -761,6 +781,7 @@ function BaganatorClassicLiveItemButtonMixin:SetItemDetails(cacheData)
   SetItemButtonTexture(self, texture or self.emptySlotFilepath);
   SetItemButtonQuality(self, quality, itemID);
   ApplyQualityBorderClassic(self, quality)
+  UpdateForGlow(self, quality)
   SetItemButtonCount(self, itemCount);
   SetItemButtonDesaturated(self, locked);
   
