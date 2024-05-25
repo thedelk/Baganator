@@ -222,3 +222,33 @@ function Baganator.Utilities.AutoSetGuildSortMethod()
     end
   end
 end
+
+function Baganator.Utilities.AddGuildSortManager(parent)
+  parent.sortManager = CreateFrame("Frame", nil, parent)
+  function parent.sortManager:Cancel()
+    self:SetScript("OnUpdate", nil)
+    Syndicator.CallbackRegistry:UnregisterCallback("GuildCacheUpdate", self)
+    if self.timer then
+      self.timer:Cancel()
+      self.timer = nil
+    end
+  end
+  function parent.sortManager:Apply(status, retryFunc, completeFunc)
+    self:Cancel()
+    if status == Baganator.Constants.SortStatus.Complete then
+      completeFunc()
+    elseif status == Baganator.Constants.SortStatus.WaitingMove then
+      Syndicator.CallbackRegistry:RegisterCallback("GuildCacheUpdate",  function(_, character, updatedBags)
+        self:Cancel()
+        retryFunc()
+      end, self)
+      self.timer = C_Timer.NewTimer(1, function()
+        self:Cancel()
+        retryFunc()
+      end)
+    else -- waiting item data or item unlock
+      self:SetScript("OnUpdate", retryFunc)
+    end
+  end
+  parent.sortManager:SetScript("OnHide", parent.sortManager.Cancel)
+end

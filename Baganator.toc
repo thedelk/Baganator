@@ -23,6 +23,7 @@ Sorting\BagUsageChecks.lua
 Sorting\ItemFields.lua
 Sorting\Order.lua
 Sorting\OrderBags.lua
+Sorting\OrderGuildBank.lua
 Sorting\CombineStacks.lua
 Sorting\ModeCheck.lua
 

@@ -18,6 +18,8 @@ function BaganatorSingleViewGuildViewMixin:OnLoad()
   self.otherTabsCache = {}
   self.searchMonitors = {}
 
+  Baganator.Utilities.AddGuildSortManager(self) -- self.sortManager
+
   for i = 1, MAX_GUILDBANK_TABS do
     table.insert(self.searchMonitors, CreateFrame("Frame", nil, self, "SyndicatorOfflineListSearchTemplate"))
   end
@@ -475,7 +477,6 @@ function BaganatorSingleViewGuildViewMixin:UpdateForGuild(guild, isLive)
       and #guildData.bank > 0
       -- Use 7*14 to cover that every item in a tab can be sorted
       and (remainingWithdrawals == -1 or remainingWithdrawals > #guildData.bank * 7*14)
-      and addonTable.ExternalGuildBankSorts[Baganator.Config.Get(Baganator.Config.Options.GUILD_BANK_SORT_METHOD)]
       and Baganator.Config.Get(Baganator.Config.Options.SHOW_SORT_BUTTON)
     )
 
@@ -549,11 +550,6 @@ function BaganatorSingleViewGuildViewMixin:Transfer(button)
   end
 end
 
-function BaganatorSingleViewGuildViewMixin:CombineStacksAndSort()
-  local sortsDetails = addonTable.ExternalGuildBankSorts[Baganator.Config.Get(Baganator.Config.Options.GUILD_BANK_SORT_METHOD)]
-  sortsDetails.callback()
-end
-
 function BaganatorSingleViewGuildViewMixin:ToggleTabText()
   if self.TabTextFrame:IsShown() then
     self.TabTextFrame:Hide()
@@ -597,6 +593,37 @@ function BaganatorSingleViewGuildViewMixin:ToggleMoneyLogs()
   self.LogsFrame:SetTitle(BAGANATOR_L_MONEY_LOGS)
   self.LogsFrame:ApplyMoney()
   QueryGuildBankLog(MAX_GUILDBANK_TABS + 1);
+end
+
+function BaganatorSingleViewGuildViewMixin:DoSort(isReverse)
+  local function DoSortInternal()
+    local status = Baganator.Sorting.ApplyGuildOrdering(
+      Syndicator.API.GetGuild(self.lastGuild).bank[self.currentTab].slots,
+      self.currentTab,
+      isReverse
+    )
+    self.sortManager:Apply(status, DoSortInternal, function() end)
+  end
+  DoSortInternal()
+end
+
+function BaganatorSingleViewGuildViewMixin:CombineStacksAndSort(isReverse)
+  local sortMethod = Baganator.Config.Get(Baganator.Config.Options.SORT_METHOD)
+
+  if not Baganator.Sorting.IsModeAvailable(sortMethod) then
+    Baganator.Config.ResetOne(Baganator.Config.Options.SORT_METHOD)
+    sortMethod = Baganator.Config.Get(Baganator.Config.Options.SORT_METHOD)
+  end
+
+  if addonTable.ExternalContainerSorts[sortMethod] then
+    addonTable.ExternalContainerSorts[sortMethod].callback(isReverse, Baganator.API.Constants.ContainerType.Backpack)
+  elseif sortMethod == "combine_stacks_only" then
+    self:CombineStacks(function() end)
+  else
+    --self:CombineStacks(function()
+      self:DoSort(isReverse)
+    --end)
+  end
 end
 
 BaganatorGuildLogsTemplateMixin = {}
