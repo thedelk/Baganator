@@ -83,8 +83,10 @@ function addonTable.ItemButtonUtil.GetPaddingAndSize()
   return iconPadding, iconSize
 end
 
-local function ApplySizing(self, rowWidth, iconPadding, iconSize, flexDimension, staticDimension)
-  self:SetSize(rowWidth * (iconSize + iconPadding) - iconPadding, (iconPadding + iconSize) * ((flexDimension > 0 and (staticDimension + 1) or staticDimension)))
+local function ApplySizing(self, rowWidth, iconPadding, iconSize, flexDimension, staticDimension, extraX, extraY)
+  extraX = extraX or 0
+  extraY = extraY or 0
+  self:SetSize(rowWidth * (iconSize + iconPadding) - iconPadding + extraX, (iconPadding + iconSize) * ((flexDimension > 0 and (staticDimension + 1) or staticDimension)) + extraY)
 end
 
 local function FlowButtonsRows(self, rowWidth)
@@ -121,7 +123,7 @@ local function FlowButtonsColumns(self, rowWidth)
 
   local iconPaddingScaled = iconPadding * 37 / iconSize
   for _, button in ipairs(self.buttons) do
-    button:SetPoint("TOPLEFT", self, cols * (37 + iconPaddingScaled), - rows * (37 + iconPaddingScaled))
+    button:SetPoint("TOPLEFT", self, cols * (37 + iconPaddingScaled) + math.floor(cols/2) * iconPaddingScaled * 2, - rows * (37 + iconPaddingScaled))
     button:SetScale(iconSize / 37)
     MasqueRegistration(button)
     rows = rows + 1
@@ -131,7 +133,7 @@ local function FlowButtonsColumns(self, rowWidth)
     end
   end
 
-  ApplySizing(self, rowWidth, iconPadding, iconSize, cols, columnHeight - 1)
+  ApplySizing(self, rowWidth, iconPadding, iconSize, cols, columnHeight - 1, math.floor((cols - 1)/2) * iconPadding * 2)
   self.oldRowWidth = rowWidth
 end
 
