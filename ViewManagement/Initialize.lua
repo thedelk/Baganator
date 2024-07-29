@@ -380,7 +380,9 @@ function addonTable.ViewManagement.Initialize()
   end, CallErrorHandler)
 
   xpcall(function()
-    SetupGuildView()
+    if addonTable.Config.Get(addonTable.Config.Options.USE_GUILD_VIEW) then
+      SetupGuildView()
+    end
   end, CallErrorHandler)
 
   SetupCharacterSelect()

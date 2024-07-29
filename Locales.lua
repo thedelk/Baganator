@@ -105,6 +105,7 @@ L["SEARCH_HELP"] = "Search Help"
 L["JOIN_THE_DISCORD"] = "Join the Discord"
 L["DISCORD_DESCRIPTION"] = "Updates, feature suggestions and support"
 L["BY_PLUSMOUSE"] = "by plusmouse"
+L["USE_BAGANATOR_FOR_GUILD_BANK"] = "Use Baganator for guild bank"
 
 L["DEPOSIT_REAGENTS"] = "Deposit Reagents"
 L["BUY_REAGENT_BANK"] = "Buy Reagent Bank"

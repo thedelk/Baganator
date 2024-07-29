@@ -110,7 +110,7 @@ function BaganatorItemViewCommonBackpackViewMixin:OnLoad()
     hideOnEscape = 1,
   }
 
-  if addonTable.Constants.IsEra then
+  if addonTable.Constants.IsEra or not addonTable.Config.Get(addonTable.Config.Options.USE_GUILD_VIEW) then
     local index = tIndexOf(self.TopButtons, self.ToggleGuildBankButton)
     table.remove(self.TopButtons, index)
     self.ToggleGuildBankButton:Hide()

@@ -53,6 +53,8 @@ addonTable.Config.Options = {
   CHARACTER_SELECT_POSITION = "character_select_position",
   SETTING_ANCHORS = "setting_anchors",
 
+  USE_GUILD_VIEW = "use_guild_view",
+
   DEBUG_TIMERS = "debug_timers",
   DEBUG_KEYWORDS = "debug_keywords",
   DEBUG_CATEGORIES_SEARCH = "debug_categories_search",
@@ -123,6 +125,8 @@ addonTable.Config.Defaults = {
   [addonTable.Config.Options.JUNK_PLUGIN] = "poor_quality",
   [addonTable.Config.Options.JUNK_PLUGINS_IGNORED] = {},
   [addonTable.Config.Options.SETTING_ANCHORS] = false,
+
+  [addonTable.Config.Options.USE_GUILD_VIEW] = true,
 
   [addonTable.Config.Options.DEBUG_TIMERS] = false,
   [addonTable.Config.Options.DEBUG_KEYWORDS] = false,

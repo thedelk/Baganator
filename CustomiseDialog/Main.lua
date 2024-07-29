@@ -673,6 +673,17 @@ function BaganatorCustomiseDialogMixin:SetupGeneral()
     table.insert(allFrames, tooltipButtonFrame)
   end
 
+  local useViewOptions = GenerateFrames({
+    {
+      type = "checkbox",
+      text = BAGANATOR_L_USE_BAGANATOR_FOR_GUILD_BANK,
+      option = "use_guild_view",
+      rightText = BAGANATOR_L_BRACKETS_RELOAD_REQUIRED,
+    },
+  }, frame)
+  useViewOptions[1]:SetPoint("TOP", allFrames[#allFrames], "BOTTOM", 0, -30)
+  tAppendAll(allFrames, useViewOptions)
+
   frame:SetScript("OnShow", function()
     for index, frame in ipairs(allFrames) do
       if frame.SetValue then
