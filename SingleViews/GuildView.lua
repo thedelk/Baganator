@@ -411,7 +411,7 @@ function BaganatorSingleViewGuildViewMixin:UpdateForGuild(guild, isLive)
   guild = guild or ""
   addonTable.Utilities.ApplyVisuals(self)
 
-  local guildWidth = addonTable.Config.Get(addonTable.Config.Options.GUILD_VIEW_WIDTH)
+  local guildWidth = 14
 
   self.isLive = isLive
 

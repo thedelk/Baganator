@@ -68,16 +68,6 @@ local LAYOUT_OPTIONS = {
     option = "warband_bank_view_width",
     check = function() return Syndicator.Constants.WarbandBankActive end,
   },
-  {
-    type = "slider",
-    min = 1,
-    max = 42,
-    lowText = "1",
-    highText = "42",
-    text = BAGANATOR_L_GUILD_BANK_COLUMNS,
-    option = "guild_view_width",
-    check = NotIsEraCheck,
-  },
   { type = "spacing" },
   {
     type = "dropdown",
