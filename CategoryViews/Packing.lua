@@ -18,10 +18,8 @@ function addonTable.CategoryViews.PackSimple(activeLayouts, activeLabels, baseOf
   local endOfLineLabels = {}
 
   local function NewLine()
-    local labelOffsetX = offsetX - categorySpacing - iconPadding - prevLayout:GetWidth()
-    table.insert(endOfLineLabels, {label = prevLabel, offsetX = labelOffsetX})
     offsetX = 0
-    offsetY = offsetY - prevLayout:GetHeight() - prevLabel:GetHeight() - headerPadding * 3 / 2
+    offsetY = offsetY - prevLayout:GetHeight() - headerPadding * 3 / 2
   end
 
   for index, layout in ipairs(activeLayouts) do
@@ -51,17 +49,11 @@ function addonTable.CategoryViews.PackSimple(activeLayouts, activeLabels, baseOf
         NewLine()
       end
       layout:Show()
-      local label = activeLabels[index]
-      label:Resize()
-      label:Show()
-      label:SetPoint("TOPLEFT", offsetX + baseOffsetX, offsetY + baseOffsetY)
-      label:SetWidth(math.min(layout:GetWidth() + categorySpacing, targetPixelWidth - offsetX))
-      layout:SetPoint("TOPLEFT", offsetX + baseOffsetX, offsetY + baseOffsetY - label:GetHeight() - headerPadding / 2)
+      layout:SetPoint("TOPLEFT", offsetX + baseOffsetX, offsetY + baseOffsetY - headerPadding / 2)
       offsetX = offsetX + layout:GetWidth()
       maxWidth = math.max(maxWidth, offsetX)
       offsetX = offsetX + categorySpacing + iconPadding
       prevLayout = layout
-      prevLabel = label
     end
   end
 

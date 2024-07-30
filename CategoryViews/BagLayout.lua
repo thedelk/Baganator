@@ -98,6 +98,18 @@ function addonTable.CategoryViews.LayoutContainers(self, allBags, containerType,
     local oldResults = self.results
     self.results = results
 
+    local stackingSearch = nil
+    for _, details in ipairs(composed.details) do
+      if not stackingSearch then
+        stackingSearch = details.search
+      elseif details.type ~= "category" then
+        stackingSearch = nil
+      else
+        tAppendAll(results[stackingSearch], results[details.search])
+        results[details.search] = {}
+      end
+    end
+
     local start2 = debugprofilestop()
     local bagWidth
     if containerType == "bags" then
