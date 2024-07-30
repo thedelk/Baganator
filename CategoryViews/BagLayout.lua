@@ -51,8 +51,8 @@ local function PrearrangeEverything(self, allBags, bagIndexes, bagTypes)
       else
         if not emptySlotCount[bagTypes[bagIndex]] then
           emptySlotCount[bagTypes[bagIndex]] =  0
-          table.insert(emptySlotsOrder, {bagID = bagID, slotID = slotIndex, key = bagTypes[bagIndex]})
         end
+        table.insert(emptySlotsOrder, {bagID = bagID, slotID = slotIndex, key = bagTypes[bagIndex]})
         emptySlotCount[bagTypes[bagIndex]] = emptySlotCount[bagTypes[bagIndex]] + 1
       end
     end
@@ -279,9 +279,6 @@ function addonTable.CategoryViews.LayoutContainers(self, allBags, containerType,
         activeLayouts[1].type = "category"
         for index, button in ipairs(activeLayouts[1].buttons) do
           local bagType = emptySlotsOrder[index].key
-          button.isBag = true -- Ensure even counts of 1 are shown
-          SetItemButtonCount(button, emptySlotCount[bagType])
-          button.Count:SetShown(bagType ~= "keyring") -- Keyrings have unlimited size
           if not button.bagTypeIcon then
             button.bagTypeIcon = button:CreateTexture(nil, "OVERLAY")
             button.bagTypeIcon:SetSize(20, 20)
