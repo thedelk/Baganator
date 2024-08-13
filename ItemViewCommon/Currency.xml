@@ -4,14 +4,46 @@
       <OnLoad method="OnLoad"/>
       <OnShow method="OnShow"/>
     </Scripts>
-    <Layers>
-      <Layer level="BACKGROUND">
-        <FontString parentKey="Money" inherits="GameFontHighlight" enableMouse="true">
-          <Anchors>
-            <Anchor point="BOTTOMRIGHT" relativeKey="$parent.$parent" x="-10" y="10"/>
-          </Anchors>
-        </FontString>
-      </Layer>
-    </Layers>
+    <Frames>
+      <Frame parentKey="CurrencyBorder">
+        <Size y="23"/>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <Texture parentKey="Left" atlas="common-coinbox-left" texelSnappingBias="0">
+              <Size x="8" y="23"/>
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </Texture>
+            <Texture parentKey="Right" atlas="common-coinbox-right" texelSnappingBias="0">
+              <Size x="8" y="23"/>
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+            </Texture>
+            <Texture parentKey="Middle" atlas="_common-coinbox-center" texelSnappingBias="0">
+              <Anchors>
+                <Anchor point="TOPLEFT" relativeKey="$parent.Left" relativePoint="TOPRIGHT"/>
+                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.Right" relativePoint="BOTTOMLEFT"/>
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Anchors>
+          <Anchor point="BOTTOM" relativeKey="$parent.$parent" y="5"/>
+        </Anchors>
+      </Frame>
+      <Frame parentKey="Currency">
+        <Layers>
+          <Layer level="ARTWORK">
+            <FontString parentKey="Money" inherits="NumberFontNormal" enableMouse="true">
+              <Anchors>
+                <Anchor point="BOTTOMRIGHT" relativeKey="$parent.$parent.$parent" x="-20" y="10"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+    </Frames>
   </Frame>
 </Ui>

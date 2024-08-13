@@ -2,7 +2,7 @@ local _, addonTable = ...
 BaganatorCurrencyWidgetMixin = {}
 
 function BaganatorCurrencyWidgetMixin:OnLoad()
-  self.currencyPool = CreateFontStringPool(self, "BACKGROUND", 0, "GameFontHighlight")
+  self.currencyPool = CreateFontStringPool(self.Currency, "ARTWORK", 0, "NumberFontNormal")
 
   self.activeCurrencyTexts = {}
 
@@ -45,18 +45,18 @@ function BaganatorCurrencyWidgetMixin:OnLoad()
   local frame = CreateFrame("Frame", nil, self)
   local function UpdateMoneyDisplay()
     if IsShiftKeyDown() then
-      addonTable.ShowGoldSummaryAccount(self.Money, "ANCHOR_TOP")
+      addonTable.ShowGoldSummaryAccount(self.Currency.Money, "ANCHOR_TOP")
     else
-      addonTable.ShowGoldSummaryRealm(self.Money, "ANCHOR_TOP")
+      addonTable.ShowGoldSummaryRealm(self.Currency.Money, "ANCHOR_TOP")
     end
   end
-  self.Money:SetScript("OnEnter", function()
+  self.Currency.Money:SetScript("OnEnter", function()
     UpdateMoneyDisplay()
     frame:RegisterEvent("MODIFIER_STATE_CHANGED")
     frame:SetScript("OnEvent", UpdateMoneyDisplay)
   end)
 
-  self.Money:SetScript("OnLeave", function()
+  self.Currency.Money:SetScript("OnLeave", function()
     frame:UnregisterEvent("MODIFIER_STATE_CHANGED")
     GameTooltip:Hide()
   end)
@@ -98,7 +98,7 @@ function BaganatorCurrencyWidgetMixin:OnShow()
 end
 
 local function ShowCurrencies(self, character)
-  self.Money:SetText(addonTable.Utilities.GetMoneyString(Syndicator.API.GetCharacter(character).money, true))
+  self.Currency.Money:SetText(addonTable.Utilities.GetMoneyString(Syndicator.API.GetCharacter(character).money, true))
 
   local characterCurrencies = Syndicator.API.GetCharacter(character).currencies
 
@@ -113,7 +113,7 @@ local function ShowCurrencies(self, character)
     return
   end
 
-  local prev = self.Money
+  local prev = self.Currency.Money
 
   self:CacheBackpackCurrencies()
 
@@ -158,20 +158,24 @@ local function ShowCurrencies(self, character)
   end
 end
 
-function BaganatorCurrencyWidgetMixin:UpdateCurrencyTextVisibility(offsetLeft)
-  if not offsetLeft then
+function BaganatorCurrencyWidgetMixin:UpdateCurrencyTextVisibility(offsetLeft, offsetRight)
+  if not offsetLeft or not offsetRight then
     return
   end
 
   self.lastOffsetLeft = offsetLeft
+  self.lastOffsetRight = offsetRight
 
   if self:GetParent():GetLeft() == nil then
     return
   end
 
   for _, fs in ipairs(self.activeCurrencyTexts) do
-    fs:SetShown(fs:GetLeft() > self:GetParent():GetLeft() + offsetLeft)
+    fs:SetShown(fs:GetLeft() > self:GetParent():GetLeft() + offsetLeft + 5)
   end
+
+  self.CurrencyBorder:SetPoint("LEFT", self:GetParent(), "LEFT", offsetLeft - 5, 0)
+  self.CurrencyBorder:SetPoint("RIGHT", self:GetParent(), "RIGHT", 5 - offsetRight, 0)
 end
 
 function BaganatorCurrencyWidgetMixin:UpdateCurrencies(character)

@@ -168,11 +168,13 @@ function BaganatorSingleViewBankViewCharacterViewMixin:UpdateForCharacter(charac
       self.BuyReagentBankButton:SetPoint("LEFT", activeBank, -2, 0)
       self.BuyReagentBankButton:SetPoint("BOTTOM", 0, 6)
     end
+    lastButton = self.BuyReagentBankButton
   end
   if self.DepositIntoReagentsBankButton:IsShown() then
     table.insert(self:GetParent().AllButtons, self.DepositIntoReagentsBankButton)
     self.DepositIntoReagentsBankButton:ClearAllPoints()
     self.DepositIntoReagentsBankButton:SetPoint("TOPLEFT", lastButton, "TOPRIGHT", 5, 0)
+    lastButton = self.DepositIntoReagentsBankButton
   end
 
   activeBank:ClearAllPoints()
@@ -185,7 +187,7 @@ function BaganatorSingleViewBankViewCharacterViewMixin:UpdateForCharacter(charac
     bankHeight + 75
   )
 
-  self.CurrencyWidget:UpdateCurrencyTextVisibility(lastButton and lastButton:GetRight() - self:GetLeft() + 10 or sideSpacing + addonTable.Constants.ButtonFrameOffset)
+  self.CurrencyWidget:UpdateCurrencyTextVisibility(lastButton and lastButton:GetRight() - self:GetLeft() + 10 or sideSpacing + addonTable.Constants.ButtonFrameOffset, sideSpacing)
 
 
   self:GetParent():OnTabFinished()

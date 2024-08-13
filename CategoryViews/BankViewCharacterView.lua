@@ -137,12 +137,14 @@ function BaganatorCategoryViewBankViewCharacterViewMixin:UpdateForCharacter(char
 
   local buttonPadding = 0
 
+  local offsetCurrencies = sideSpacing + addonTable.Constants.ButtonFrameOffset
   if self.BuyReagentBankButton:IsShown() then
     table.insert(self:GetParent().AllButtons, self.BuyReagentBankButton)
     self.BuyReagentBankButton:ClearAllPoints()
     self.BuyReagentBankButton:SetPoint("LEFT", self, addonTable.Constants.ButtonFrameOffset + sideSpacing - 2, 0)
     self.BuyReagentBankButton:SetPoint("BOTTOM", self, 0, 6)
     buttonPadding = 2
+    offsetCurrencies = self.BuyReagentBankButton:GetRight() - self:GetLeft() + 10
   end
   if self.DepositIntoReagentsBankButton:IsShown() then
     table.insert(self:GetParent().AllButtons, self.DepositIntoReagentsBankButton)
@@ -150,6 +152,7 @@ function BaganatorCategoryViewBankViewCharacterViewMixin:UpdateForCharacter(char
     self.DepositIntoReagentsBankButton:SetPoint("LEFT", self, addonTable.Constants.ButtonFrameOffset + sideSpacing - 2, 0)
     self.DepositIntoReagentsBankButton:SetPoint("BOTTOM", self, 0, 6)
     buttonPadding = 2
+    offsetCurrencies = self.DepositIntoReagentsBankButton:GetRight() - self:GetLeft() + 10
   end
 
   self.isGrouping = not self.isLive and addonTable.Config.Get(addonTable.Config.Options.CATEGORY_ITEM_GROUPING)
@@ -167,7 +170,7 @@ function BaganatorCategoryViewBankViewCharacterViewMixin:UpdateForCharacter(char
       math.max(addonTable.CategoryViews.Constants.MinWidth, maxWidth + sideSpacing * 2 + addonTable.Constants.ButtonFrameOffset - 2),
       maxHeight + 75 + topSpacing / 2 + buttonPadding
     )
-    self.CurrencyWidget:UpdateCurrencyTextVisibility(sideSpacing + addonTable.Constants.ButtonFrameOffset)
+    self.CurrencyWidget:UpdateCurrencyTextVisibility(offsetCurrencies, sideSpacing)
 
     local searchText = self:GetParent().SearchWidget.SearchBox:GetText()
     if self.searchToApply then
