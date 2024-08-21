@@ -289,10 +289,9 @@ function addonTable.Utilities.AddScrollBar(self)
   self.additionalOffsets = { top = 0, bottom = 0, left = 0, right = 0}
 
   function self:UpdateScroll()
-    print(self:IsShown(), self:IsVisible(), self:GetPoint(1))
     self.ScrollChild:SetSize(self:GetSize())
     self.ScrollBox:SetSize(
-      self:GetWidth() + self.additionalOffsets.left + self.additionalOffsets.right,
+      self:GetWidth() + self.additionalOffsets.left + self.additionalOffsets.right + self.padding.left + self.padding.right,
       math.min(
         self:GetHeight() + self.padding.top + self.padding.bottom + self.additionalOffsets.top + self.additionalOffsets.bottom + 10,
         UIParent:GetHeight()
