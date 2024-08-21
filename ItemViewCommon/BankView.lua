@@ -6,10 +6,27 @@ function BaganatorItemViewCommonBankViewMixin:OnLoad()
   ButtonFrameTemplate_HideButtonBar(self)
   self.Inset:Hide()
 
+  do
+    self.ScrollBox = CreateFrame("Frame", nil, UIParent, "WowScrollBox")
+    self.ScrollBox:SetClampedToScreen(true)
+    self.ScrollBox:Hide()
+    self.ScrollChild = CreateFrame("Frame", nil, self.ScrollBox)
+    self.ScrollBar = CreateFrame("EventFrame", nil, UIParent, "MinimalScrollBar")
+    self.ScrollBar:SetPoint("TOPLEFT", self.ScrollBox, "TOPRIGHT", 2, -2)
+    self.ScrollBar:SetPoint("BOTTOMLEFT", self.ScrollBox, "BOTTOMRIGHT", 2, 2)
+    self.ScrollChild:SetPoint("TOPLEFT")
+    self.ScrollChild.scrollable = true
+    self:SetParent(self.ScrollChild)
+    ScrollUtil.InitScrollBoxWithScrollBar(self.ScrollBox, self.ScrollBar, CreateScrollBoxLinearView())
+    ScrollUtil.AddManagedScrollBarVisibilityBehavior(self.ScrollBox, self.ScrollBar)
+  end
+  self:Show()
+  self:ClearAllPoints()
+  self:SetPoint("TOPLEFT")
+
   self:RegisterForDrag("LeftButton")
-  self:SetMovable(true)
-  self:SetClampedToScreen(true)
-  self:SetUserPlaced(false)
+  self.ScrollBox:SetMovable(true)
+  self.ScrollBox:SetUserPlaced(false)
 
   self.Anchor = addonTable.ItemViewCommon.GetAnchorSetter(self, addonTable.Config.Options.BANK_ONLY_VIEW_POSITION)
 
@@ -104,21 +121,22 @@ end
 
 function BaganatorItemViewCommonBankViewMixin:OnDragStart()
   if not addonTable.Config.Get(addonTable.Config.Options.LOCK_FRAMES) then
-    self:StartMoving()
-    self:SetUserPlaced(false)
+    self.ScrollBox:StartMoving()
+    self.ScrollBox:SetUserPlaced(false)
   end
 end
 
 function BaganatorItemViewCommonBankViewMixin:OnDragStop()
-  self:StopMovingOrSizing()
-  self:SetUserPlaced(false)
+  self.ScrollBox:StopMovingOrSizing()
+  self.ScrollBox:SetUserPlaced(false)
   local oldCorner = addonTable.Config.Get(addonTable.Config.Options.BANK_ONLY_VIEW_POSITION)[1]
-  addonTable.Config.Set(addonTable.Config.Options.BANK_ONLY_VIEW_POSITION, {addonTable.Utilities.ConvertAnchorToCorner(oldCorner, self)})
+  addonTable.Config.Set(addonTable.Config.Options.BANK_ONLY_VIEW_POSITION, {addonTable.Utilities.ConvertAnchorToCorner(oldCorner, self.ScrollBox)})
 end
 
 function BaganatorItemViewCommonBankViewMixin:OnEvent(eventName)
   if eventName == "BANKFRAME_OPENED" then
     self:Show()
+    self.ScrollBox:Show()
     self.liveBankActive = true
     if self.hasCharacter then
       self.Character:ResetToLive()
@@ -127,6 +145,7 @@ function BaganatorItemViewCommonBankViewMixin:OnEvent(eventName)
   elseif eventName == "BANKFRAME_CLOSED" then
     self.liveBankActive = false
     self:Hide()
+    self.ScrollBox:Hide()
   end
 end
 
@@ -165,6 +184,8 @@ function BaganatorItemViewCommonBankViewMixin:OnHide(eventName)
     CloseBankFrame()
   end
 
+  self.ScrollBox:Hide()
+  self.ScrollBar:Hide()
   addonTable.CallbackRegistry:TriggerEvent("SearchTextChanged", "")
 end
 
@@ -188,6 +209,10 @@ end
 
 function BaganatorItemViewCommonBankViewMixin:UpdateView()
   self.start = debugprofilestop()
+
+  self.padding = { top = 0, bottom = 0, left = 0, right = 0}
+
+  self.padding.bottom = self.Tabs[1] and self.Tabs[1]:IsShown() and self.Tabs[1]:GetHeight() or 0
 
   if Syndicator.Constants.WarbandBankActive and not C_PlayerInteractionManager.IsInteractingWithNpcOfType(Enum.PlayerInteractionType.AccountBanker) then
     self.Tabs[1]:Show()
@@ -218,6 +243,10 @@ function BaganatorItemViewCommonBankViewMixin:OnTabFinished()
   self.ButtonVisibility:Update()
 
   self:SetSize(self.currentTab:GetSize())
+  self.ScrollChild:SetSize(self.currentTab:GetSize())
+  self.ScrollBox:SetSize(self:GetWidth(), math.min(self:GetHeight() + self.padding.top + self.padding.bottom + 10, UIParent:GetHeight()))
+  self.ScrollBox:GetView():SetPadding((self.padding.top or 0) + 3, self.padding.bottom + 3, self.padding.left, self.padding.right or 0)
+  self.ScrollBox:FullUpdate(ScrollBoxConstants.UpdateImmediately)
 
   if addonTable.Config.Get(addonTable.Config.Options.DEBUG_TIMERS) then
     print("bank", debugprofilestop() - self.start)

@@ -165,8 +165,8 @@ local function SetupBankView()
 
   local function SetPositions()
     for key, bankView in pairs(allBankViews) do
-      bankView:ClearAllPoints()
-      bankView:SetPoint(unpack(addonTable.Config.Get(addonTable.Config.Options.BANK_ONLY_VIEW_POSITION)))
+      bankView.ScrollBox:ClearAllPoints()
+      bankView.ScrollBox:SetPoint(unpack(addonTable.Config.Get(addonTable.Config.Options.BANK_ONLY_VIEW_POSITION)))
     end
   end
 
@@ -186,18 +186,18 @@ local function SetupBankView()
 
   addonTable.CallbackRegistry:RegisterCallback("BankToggle", function(_, characterName)
     characterName = characterName or Syndicator.API.GetCurrentCharacter()
-    bankView:SetShown(characterName ~= bankView.Character.lastCharacter or not bankView:IsShown())
+    bankView.ScrollBox:SetShown(characterName ~= bankView.Character.lastCharacter or not bankView:IsShown())
     bankView:UpdateViewToCharacter(characterName)
   end)
 
   addonTable.CallbackRegistry:RegisterCallback("BankShow", function(_, entity, subView)
     if type(entity) == "string" or entity == nil then -- Character bank
       local characterName = entity or Syndicator.API.GetCurrentCharacter()
-      bankView:Show()
+      bankView.ScrollBox:Show()
       bankView:UpdateViewToCharacter(characterName)
     elseif type(entity) == "number" then -- Warband bank
       subView = subView or addonTable.Config.Get(addonTable.Config.Options.WARBAND_CURRENT_TAB)
-      bankView:Show()
+      bankView.ScrollBox:Show()
       bankView:UpdateViewToWarband(entity, subView)
     end
   end)

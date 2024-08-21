@@ -44,6 +44,8 @@ function BaganatorItemViewCommonBankViewCharacterViewMixin:OnLoad()
       end
     elseif settingName == addonTable.Config.Options.BANK_ONLY_VIEW_SHOW_BAG_SLOTS then
       self.BagSlots:Update(self.lastCharacter, self.isLive)
+      self:GetParent().padding.top = self.BagSlots:IsShown() and self.BagSlots:GetHeight() or 0
+      self:GetParent():OnTabFinished()
     end
   end)
 
@@ -185,6 +187,8 @@ function BaganatorItemViewCommonBankViewCharacterViewMixin:UpdateForCharacter(ch
   if self.CurrencyWidget.lastCharacter ~= self.lastCharacter then
     self.CurrencyWidget:UpdateCurrencies(character)
   end
+
+  self:GetParent().padding.top = self.BagSlots:IsShown() and self.BagSlots:GetHeight() or 0
 
   self:SetupBlizzardFramesForTab()
 end
