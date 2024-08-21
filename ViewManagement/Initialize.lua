@@ -31,8 +31,8 @@ local function SetupBackpackView()
 
   local function SetPositions()
     for _, backpackView in pairs(allBackpackViews) do
-      backpackView:ClearAllPoints()
-      backpackView:SetPoint(unpack(addonTable.Config.Get(addonTable.Config.Options.MAIN_VIEW_POSITION)))
+      backpackView.ScrollBox:ClearAllPoints()
+      backpackView.ScrollBox:SetPoint(unpack(addonTable.Config.Get(addonTable.Config.Options.MAIN_VIEW_POSITION)))
     end
   end
 
@@ -63,7 +63,8 @@ local function SetupBackpackView()
     if GetTime() == lastToggleTime then
       return
     end
-    backpackView:SetShown(not backpackView:IsShown())
+    backpackView:SetScrollShown(not backpackView:IsScrollShown())
+    backpackView:Show()
     if backpackView:IsVisible() then
       backpackView:UpdateForCharacter(Syndicator.API.GetCurrentCharacter(), true)
     end
@@ -73,6 +74,7 @@ local function SetupBackpackView()
 
   addonTable.CallbackRegistry:RegisterCallback("BagShow",  function(_, characterName)
     characterName = characterName or Syndicator.API.GetCurrentCharacter()
+    backpackView:ShowScroll()
     backpackView:Show()
     backpackView:UpdateForCharacter(characterName, characterName == backpackView.liveCharacter)
     UpdateButtons()
@@ -84,7 +86,7 @@ local function SetupBackpackView()
   end)
 
   addonTable.CallbackRegistry:RegisterCallback("QuickSearch",  function(_)
-    if not backpackView:IsShown() then
+    if not backpackView:IsVisible() then
       addonTable.CallbackRegistry:TriggerEvent("BagShow")
     end
     backpackView.SearchWidget.SearchBox:SetFocus()
@@ -92,7 +94,7 @@ local function SetupBackpackView()
 
   addonTable.CallbackRegistry:RegisterCallback("SettingChanged", function(_, settingName)
     if settingName == addonTable.Config.Options.VIEW_TYPE then
-      local isShown = backpackView:IsShown()
+      local isShown = backpackView:IsVisible()
       backpackView:Hide()
       backpackView = allBackpackViews[addonTable.Config.Get(settingName)]
       if isShown then
@@ -186,18 +188,23 @@ local function SetupBankView()
 
   addonTable.CallbackRegistry:RegisterCallback("BankToggle", function(_, characterName)
     characterName = characterName or Syndicator.API.GetCurrentCharacter()
-    bankView.ScrollBox:SetShown(characterName ~= bankView.Character.lastCharacter or not bankView:IsShown())
-    bankView:UpdateViewToCharacter(characterName)
+    bankView:Show()
+    bankView:SetScrollShown(characterName ~= bankView.Character.lastCharacter or not bankView:IsScrollShown())
+    if bankView:IsScrollShown() then
+      bankView:UpdateViewToCharacter(characterName)
+    end
   end)
 
   addonTable.CallbackRegistry:RegisterCallback("BankShow", function(_, entity, subView)
     if type(entity) == "string" or entity == nil then -- Character bank
       local characterName = entity or Syndicator.API.GetCurrentCharacter()
-      bankView.ScrollBox:Show()
+      bankView:Show()
+      bankView:ShowScroll()
       bankView:UpdateViewToCharacter(characterName)
     elseif type(entity) == "number" then -- Warband bank
       subView = subView or addonTable.Config.Get(addonTable.Config.Options.WARBAND_CURRENT_TAB)
-      bankView.ScrollBox:Show()
+      bankView:Show()
+      bankView:ShowScroll()
       bankView:UpdateViewToWarband(entity, subView)
     end
   end)

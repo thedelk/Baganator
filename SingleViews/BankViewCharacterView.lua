@@ -185,8 +185,7 @@ function BaganatorSingleViewBankViewCharacterViewMixin:UpdateForCharacter(charac
     bankHeight + 75
   )
 
-  self.CurrencyWidget:UpdateCurrencyTextVisibility(lastButton and lastButton:GetRight() - self:GetLeft() + 10 or sideSpacing + addonTable.Constants.ButtonFrameOffset)
-
-
   self:GetParent():OnTabFinished()
+
+  self.CurrencyWidget:UpdateCurrencyTextVisibility(lastButton and lastButton:GetRight() - self:GetLeft() + 10 or sideSpacing + addonTable.Constants.ButtonFrameOffset)
 end

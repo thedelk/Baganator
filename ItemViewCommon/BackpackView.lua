@@ -21,10 +21,9 @@ function BaganatorItemViewCommonBackpackViewMixin:OnLoad()
   ButtonFrameTemplate_HidePortrait(self)
   ButtonFrameTemplate_HideButtonBar(self)
   self.Inset:Hide()
+
+  addonTable.Utilities.AddScrollBar(self)
   self:RegisterForDrag("LeftButton")
-  self:SetMovable(true)
-  self:SetClampedToScreen(true)
-  self:SetUserPlaced(false)
 
   self.liveItemButtonPool = addonTable.ItemViewCommon.GetLiveItemButtonPool(self)
 
@@ -75,6 +74,8 @@ function BaganatorItemViewCommonBackpackViewMixin:OnLoad()
       end
     elseif settingName == addonTable.Config.Options.MAIN_VIEW_SHOW_BAG_SLOTS then
       self.BagSlots:Update(self.lastCharacter, self.isLive)
+      self.padding.top = self.BagSlots:IsShown() and self.BagSlots:GetHeight() or 0
+      self:UpdateScroll()
     end
   end)
 
@@ -139,6 +140,7 @@ function BaganatorItemViewCommonBackpackViewMixin:OnShow()
 end
 
 function BaganatorItemViewCommonBackpackViewMixin:OnHide()
+  self:HideScroll()
   PlaySound(SOUNDKIT.IG_BACKPACK_CLOSE);
 end
 
@@ -148,18 +150,15 @@ end
 
 function BaganatorItemViewCommonBackpackViewMixin:OnDragStart()
   if not addonTable.Config.Get(addonTable.Config.Options.LOCK_FRAMES) then
-    self:StartMoving()
-    self:SetUserPlaced(false)
+    self:UpdateScrollStartMoving()
   end
 end
 
 function BaganatorItemViewCommonBackpackViewMixin:OnDragStop()
-  self:StopMovingOrSizing()
-  self:SetUserPlaced(false)
+  self:UpdateScrollStopMoving()
   local oldCorner = addonTable.Config.Get(addonTable.Config.Options.MAIN_VIEW_POSITION)[1]
-  addonTable.Config.Set(addonTable.Config.Options.MAIN_VIEW_POSITION, {addonTable.Utilities.ConvertAnchorToCorner(oldCorner, self)})
-  self:ClearAllPoints()
-  self:SetPoint(unpack(addonTable.Config.Get(addonTable.Config.Options.MAIN_VIEW_POSITION)))
+  addonTable.Config.Set(addonTable.Config.Options.MAIN_VIEW_POSITION, {addonTable.Utilities.ConvertAnchorToCorner(oldCorner, self.ScrollBox)})
+  self.ScrollBox:SetPoint(unpack(addonTable.Config.Get(addonTable.Config.Options.MAIN_VIEW_POSITION)))
 end
 
 function BaganatorItemViewCommonBackpackViewMixin:ToggleBank()
@@ -297,6 +296,8 @@ function BaganatorItemViewCommonBackpackViewMixin:UpdateForCharacter(character, 
   local start = debugprofilestop()
   addonTable.Utilities.ApplyVisuals(self)
 
+  self.padding = { top = 0, bottom = 0, left = 0, right = 0 }
+
   local characterData = Syndicator.API.GetCharacter(character)
 
   if not characterData then
@@ -309,6 +310,8 @@ function BaganatorItemViewCommonBackpackViewMixin:UpdateForCharacter(character, 
   self:SetupTabs()
   self:SelectTab(character)
 
+  self.padding.bottom = self.Tabs[1] and self.Tabs[1]:IsShown() and self.Tabs[1]:GetHeight() or 0
+
   local oldLast = self.lastCharacter
   self.lastCharacter = character
   self.isLive = isLive
@@ -316,6 +319,8 @@ function BaganatorItemViewCommonBackpackViewMixin:UpdateForCharacter(character, 
   self.BagSlots:Update(self.lastCharacter, self.isLive)
   local containerInfo = characterData.containerInfo
   self.ToggleBagSlotsButton:SetShown(self.isLive or (containerInfo and containerInfo.bags))
+
+  self.padding.top = self.BagSlots:IsShown() and self.BagSlots:GetHeight() or 0
 
   if oldLast ~= character then
     addonTable.CallbackRegistry:TriggerEvent("CharacterSelect", character)

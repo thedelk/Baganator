@@ -185,6 +185,8 @@ function BaganatorCategoryViewBackpackViewMixin:UpdateForCharacter(character, is
 
     self:UpdateAllButtons()
 
+    self:UpdateScroll()
+
     addonTable.CallbackRegistry:TriggerEvent("ViewComplete")
   end)
 end

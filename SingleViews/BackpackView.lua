@@ -168,6 +168,8 @@ function BaganatorSingleViewBackpackViewMixin:UpdateForCharacter(character, isLi
 
   self:UpdateAllButtons()
 
+  self:UpdateScroll()
+
   self.CurrencyWidget:UpdateCurrencyTextVisibility(lastButton and lastButton:GetRight() - self:GetLeft() + 10 or sideSpacing + addonTable.Constants.ButtonFrameOffset)
 
   addonTable.CallbackRegistry:TriggerEvent("ViewComplete")

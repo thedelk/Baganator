@@ -267,3 +267,66 @@ function addonTable.Utilities.ConvertAnchorToCorner(targetCorner, frame)
     error("Unknown anchor")
   end
 end
+
+function addonTable.Utilities.AddScrollBar(self)
+  self.ScrollBox = CreateFrame("Frame", nil, UIParent, "WowScrollBox")
+  self.ScrollBox:SetToplevel(true)
+  self.ScrollBox:SetClampedToScreen(true)
+  self.ScrollBox:SetMovable(true)
+  self.ScrollBox:SetUserPlaced(false)
+  self.ScrollBox:Hide()
+  self.ScrollBar = CreateFrame("EventFrame", nil, UIParent, "MinimalScrollBar")
+  self.ScrollBar:SetPoint("TOPLEFT", self.ScrollBox, "TOPRIGHT", 2, -2)
+  self.ScrollBar:SetPoint("BOTTOMLEFT", self.ScrollBox, "BOTTOMRIGHT", 2, 2)
+  self.ScrollBar:SetToplevel(true)
+  self.ScrollChild = CreateFrame("Frame", nil, self.ScrollBox)
+  self.ScrollChild.scrollable = true
+  self:SetParent(self.ScrollChild)
+  self:SetPoint("TOPLEFT")
+  ScrollUtil.InitScrollBoxWithScrollBar(self.ScrollBox, self.ScrollBar, CreateScrollBoxLinearView())
+  ScrollUtil.AddManagedScrollBarVisibilityBehavior(self.ScrollBox, self.ScrollBar)
+  self:Show()
+  self.additionalOffsets = { top = 0, bottom = 0, left = 0, right = 0}
+
+  function self:UpdateScroll()
+    print(self:IsShown(), self:IsVisible(), self:GetPoint(1))
+    self.ScrollChild:SetSize(self:GetSize())
+    self.ScrollBox:SetSize(
+      self:GetWidth() + self.additionalOffsets.left + self.additionalOffsets.right,
+      math.min(
+        self:GetHeight() + self.padding.top + self.padding.bottom + self.additionalOffsets.top + self.additionalOffsets.bottom + 10,
+        UIParent:GetHeight()
+      )
+    )
+    self.ScrollBox:GetView():SetPadding(self.padding.top + self.additionalOffsets.top + 3, self.padding.bottom + self.additionalOffsets.bottom + 3, self.padding.left + self.additionalOffsets.left, self.padding.right + self.additionalOffsets.right)
+    self.ScrollBox:FullUpdate(ScrollBoxConstants.UpdateImmediately)
+  end
+
+  function self:UpdateScrollStartMoving()
+    self.ScrollBox:StartMoving()
+    self.ScrollBox:SetUserPlaced(false)
+  end
+
+  function self:UpdateScrollStopMoving()
+    self.ScrollBox:StopMovingOrSizing()
+    self.ScrollBox:SetUserPlaced(false)
+  end
+
+  function self:ShowScroll()
+    self.ScrollBox:Show()
+  end
+
+  function self:HideScroll()
+    self.ScrollBox:Hide()
+    self.ScrollBar:Hide()
+  end
+
+  function self:SetScrollShown(shown)
+    self.ScrollBox:SetShown(shown)
+    self.ScrollBar:SetShown(shown)
+  end
+
+  function self:IsScrollShown()
+    return self.ScrollBox:IsShown()
+  end
+end

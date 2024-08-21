@@ -1,5 +1,5 @@
 <Ui>
-  <Frame name="BaganatorItemViewCommonBankViewTemplate" virtual="true" hidden="true" topLevel="true" enableMouse="true" inherits="ButtonFrameTemplate" mixin="BaganatorItemViewCommonBankViewMixin">
+  <Frame name="BaganatorItemViewCommonBankViewTemplate" virtual="true" hidden="true" enableMouse="true" inherits="ButtonFrameTemplate" mixin="BaganatorItemViewCommonBankViewMixin">
     <Scripts>
       <OnLoad method="OnLoad"/>
       <OnEvent method="OnEvent"/>

@@ -442,7 +442,6 @@ function BaganatorBagSlotsContainerMixin:Update(character, isLive)
   end
 
   self:SetHeight(anyShown and 39 or 0)
-  print(self:GetHeight())
 end
 
 function BaganatorBagSlotsContainerMixin:OnEvent(eventName)

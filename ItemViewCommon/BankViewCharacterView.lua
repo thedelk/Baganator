@@ -45,7 +45,7 @@ function BaganatorItemViewCommonBankViewCharacterViewMixin:OnLoad()
     elseif settingName == addonTable.Config.Options.BANK_ONLY_VIEW_SHOW_BAG_SLOTS then
       self.BagSlots:Update(self.lastCharacter, self.isLive)
       self:GetParent().padding.top = self.BagSlots:IsShown() and self.BagSlots:GetHeight() or 0
-      self:GetParent():OnTabFinished()
+      self:GetParent():UpdateScroll()
     end
   end)
 
