@@ -36,7 +36,7 @@ function BaganatorItemViewCommonBankViewCharacterViewMixin:OnLoad()
       return
     end
     if tIndexOf(addonTable.Config.ItemButtonsRelayoutSettings, settingName) ~= nil then
-      for _, layout in ipairs(self.Layouts) do
+      for _, layout in ipairs(self.Container.Layouts) do
         layout:InformSettingChanged(settingName)
       end
       if self:IsVisible() then

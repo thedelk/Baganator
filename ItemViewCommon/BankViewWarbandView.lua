@@ -32,7 +32,7 @@ function BaganatorItemViewCommonBankViewWarbandViewMixin:OnLoad()
   end)
 
   addonTable.CallbackRegistry:RegisterCallback("ContentRefreshRequired",  function()
-    for _, layout in ipairs(self.Layouts) do
+    for _, layout in ipairs(self.Container.Layouts) do
       layout:RequestContentRefresh()
     end
     if self:IsVisible() then
@@ -42,7 +42,7 @@ function BaganatorItemViewCommonBankViewWarbandViewMixin:OnLoad()
 
   addonTable.CallbackRegistry:RegisterCallback("SettingChanged",  function(_, settingName)
     if tIndexOf(addonTable.Config.ItemButtonsRelayoutSettings, settingName) ~= nil then
-      for _, layout in ipairs(self.Layouts) do
+      for _, layout in ipairs(self.Container.Layouts) do
         layout:InformSettingChanged(settingName)
       end
       if self:IsVisible() then
@@ -380,7 +380,7 @@ function BaganatorItemViewCommonBankViewWarbandViewMixin:ShowTab(tabIndex, isLiv
     local minWidth = self.BankMissingHint:GetWidth() + 40
     local maxHeight = 30
 
-    for _, layout in ipairs(self.Layouts) do
+    for _, layout in ipairs(self.Container.Layouts) do
       layout:Hide()
     end
 

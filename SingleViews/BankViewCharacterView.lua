@@ -4,13 +4,13 @@ BaganatorSingleViewBankViewCharacterViewMixin = CreateFromMixins(BaganatorItemVi
 function BaganatorSingleViewBankViewCharacterViewMixin:OnLoad()
   BaganatorItemViewCommonBankViewCharacterViewMixin.OnLoad(self)
 
-  self.unallocatedItemButtonPool = addonTable.ItemViewCommon.GetLiveItemButtonPool(self)
-  self.CollapsingBagSectionsPool = addonTable.SingleViews.GetCollapsingBagSectionsPool(self)
+  self.unallocatedItemButtonPool = addonTable.ItemViewCommon.GetLiveItemButtonPool(self.Container)
+  self.CollapsingBagSectionsPool = addonTable.SingleViews.GetCollapsingBagSectionsPool(self.Container)
   self.CollapsingBankBags = {}
   self.bagDetailsForComparison = {}
 
   addonTable.CallbackRegistry:RegisterCallback("ContentRefreshRequired",  function()
-    for _, layout in ipairs(self.Layouts) do
+    for _, layout in ipairs(self.Container.Layouts) do
       layout:RequestContentRefresh()
     end
     if self:IsVisible() and self.lastCharacter ~= nil then
