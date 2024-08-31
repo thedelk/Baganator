@@ -58,7 +58,7 @@ function BaganatorItemViewCommonBackpackViewMixin:OnLoad()
         addonTable.Utilities.ApplyVisuals(self)
       end
     elseif tIndexOf(addonTable.Config.ItemButtonsRelayoutSettings, settingName) ~= nil then
-      for _, layout in ipairs(self.Layouts) do
+      for _, layout in ipairs(self.Container.Layouts) do
         layout:InformSettingChanged(settingName)
       end
       if self:IsVisible() then
@@ -338,6 +338,25 @@ function BaganatorItemViewCommonBackpackViewMixin:UpdateForCharacter(character, 
   if self.CurrencyWidget.lastCharacter ~= self.lastCharacter then
     self.CurrencyWidget:UpdateCurrencies(character)
   end
+end
+
+function BaganatorItemViewCommonBackpackViewMixin:OnFinished(character, isLive)
+  local sideSpacing, topSpacing = 13, 14
+  if addonTable.Config.Get(addonTable.Config.Options.REDUCE_SPACING) then
+    sideSpacing = 8
+    topSpacing = 7
+  end
+
+  self.Container:ClearAllPoints()
+  self.Container:SetPoint("TOPRIGHT", -sideSpacing, -50 - topSpacing / 4)
+  self:SetSize(
+    self.Container:GetWidth() + sideSpacing * 2 + addonTable.Constants.ButtonFrameOffset - 2,
+    self.Container:GetHeight() + 75
+  )
+
+  self:HideExtraTabs()
+
+  self:UpdateAllButtons()
 end
 
 function BaganatorItemViewCommonBackpackViewMixin:CombineStacks(callback)
