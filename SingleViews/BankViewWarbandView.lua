@@ -58,12 +58,7 @@ function BaganatorSingleViewBankViewWarbandViewMixin:ShowTab(tabIndex, isLive)
   local searchText = self:GetParent().SearchWidget.SearchBox:GetText()
   self:ApplySearch(searchText)
 
-  -- Copied from SingleViews/BagView.lua
-  local sideSpacing, topSpacing = 13, 14
-  if addonTable.Config.Get(addonTable.Config.Options.REDUCE_SPACING) then
-    sideSpacing = 8
-    topSpacing = 7
-  end
+  local sideSpacing, topSpacing = addonTable.Utilities.GetSpacing()
 
   local bankHeight = activeBank:GetHeight() + topSpacing / 2
 
@@ -79,6 +74,8 @@ function BaganatorSingleViewBankViewWarbandViewMixin:ShowTab(tabIndex, isLive)
   addonTable.CallbackRegistry:TriggerEvent("ViewComplete")
 
   self.Container:SetSize(activeBank:GetWidth(), bankHeight)
+
+  self:OnFinished()
 
   self:SetSize(
     math.max(self.Container:GetWidth() + sideSpacing * 2 + addonTable.Constants.ButtonFrameOffset - 2, self:GetButtonsWidth(sideSpacing)),

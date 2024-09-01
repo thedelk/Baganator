@@ -357,12 +357,7 @@ function BaganatorItemViewCommonBankViewWarbandViewMixin:ShowTab(tabIndex, isLiv
   tAppendAll(self:GetParent().AllButtons, self:GetParent().AllFixedButtons)
   tAppendAll(self:GetParent().AllButtons, self.LiveButtons)
 
-  -- Copied from ItemViewCommons/BagView.lua
-  local sideSpacing, topSpacing = 13, 14
-  if addonTable.Config.Get(addonTable.Config.Options.REDUCE_SPACING) then
-    sideSpacing = 8
-    topSpacing = 7
-  end
+  local sideSpacing, topSpacing = addonTable.Utilities.GetSpacing()
 
   if self.isLive then
     self.IncludeReagentsCheckbox:SetPoint("LEFT", self, "LEFT", addonTable.Constants.ButtonFrameOffset + sideSpacing - 2, 0)

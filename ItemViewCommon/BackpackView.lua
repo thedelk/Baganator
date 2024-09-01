@@ -323,11 +323,7 @@ function BaganatorItemViewCommonBackpackViewMixin:UpdateForCharacter(character, 
   self.SortButton:SetShown(addonTable.Utilities.ShouldShowSortButton() and isLive)
   self:UpdateTransferButton()
 
-  local sideSpacing, topSpacing = 13, 14
-  if addonTable.Config.Get(addonTable.Config.Options.REDUCE_SPACING) then
-    sideSpacing = 8
-    topSpacing = 7
-  end
+  local sideSpacing, topSpacing = addonTable.Utilities.GetSpacing()
 
   if self.tabsSetup then -- Not ready immediately on PLAYER_ENTERING_WORLD
     self.Tabs[1]:SetPoint("LEFT", self, "LEFT", sideSpacing + addonTable.Constants.ButtonFrameOffset, 0)
@@ -341,11 +337,7 @@ function BaganatorItemViewCommonBackpackViewMixin:UpdateForCharacter(character, 
 end
 
 function BaganatorItemViewCommonBackpackViewMixin:OnFinished(character, isLive)
-  local sideSpacing, topSpacing = 13, 14
-  if addonTable.Config.Get(addonTable.Config.Options.REDUCE_SPACING) then
-    sideSpacing = 8
-    topSpacing = 7
-  end
+  local sideSpacing, topSpacing = addonTable.Utilities.GetSpacing()
 
   self.Container:ClearAllPoints()
   self.Container:SetPoint("TOPRIGHT", -sideSpacing, -50 - topSpacing / 4)

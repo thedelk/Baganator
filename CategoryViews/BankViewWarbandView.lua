@@ -4,7 +4,7 @@ BaganatorCategoryViewBankViewWarbandViewMixin = CreateFromMixins(BaganatorItemVi
 function BaganatorCategoryViewBankViewWarbandViewMixin:OnLoad()
   BaganatorItemViewCommonBankViewWarbandViewMixin.OnLoad(self)
 
-  self.Layouts = {}
+  self.Container.Layouts = {}
   self.LiveLayouts = {}
   self.CachedLayouts = {}
 
@@ -20,7 +20,7 @@ function BaganatorCategoryViewBankViewWarbandViewMixin:OnLoad()
 
   addonTable.CallbackRegistry:RegisterCallback("ContentRefreshRequired",  function()
     self.LayoutManager:FullRefresh()
-    for _, layout in ipairs(self.Layouts) do
+    for _, layout in ipairs(self.Container.Layouts) do
       layout:RequestContentRefresh()
     end
     if self:IsVisible() and self.lastCharacter ~= nil then
@@ -36,7 +36,7 @@ function BaganatorCategoryViewBankViewWarbandViewMixin:OnLoad()
         self:GetParent():UpdateView()
       end
     elseif settingName == addonTable.Config.Options.SORT_METHOD then
-      for _, layout in ipairs(self.Layouts) do
+      for _, layout in ipairs(self.Container.Layouts) do
         layout:InformSettingChanged(settingName)
       end
       self.LayoutManager:SettingChanged(settingName)
@@ -90,7 +90,7 @@ function BaganatorCategoryViewBankViewWarbandViewMixin:ApplySearch(text)
     return
   end
 
-  for _, layout in ipairs(self.Layouts) do
+  for _, layout in ipairs(self.Container.Layouts) do
     if layout:IsVisible() then
       layout:ApplySearch(text)
     end
@@ -113,11 +113,7 @@ function BaganatorCategoryViewBankViewWarbandViewMixin:ShowTab(tabIndex, isLive)
     return
   end
 
-  local sideSpacing, topSpacing = 13, 14
-  if addonTable.Config.Get(addonTable.Config.Options.REDUCE_SPACING) then
-    sideSpacing = 8
-    topSpacing = 7
-  end
+  local sideSpacing, topSpacing = addonTable.Utilities.GetSpacing()
 
   self.isGrouping = not self.isLive and addonTable.Config.Get(addonTable.Config.Options.CATEGORY_ITEM_GROUPING)
   self.splitStacksDueToTransfer = self.isLive

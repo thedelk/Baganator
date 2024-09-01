@@ -120,11 +120,7 @@ function BaganatorSingleViewBackpackViewMixin:UpdateForCharacter(character, isLi
     self:ApplySearch(searchText)
   end
 
-  local sideSpacing, topSpacing = 13, 14
-  if addonTable.Config.Get(addonTable.Config.Options.REDUCE_SPACING) then
-    sideSpacing = 8
-    topSpacing = 7
-  end
+  local sideSpacing, topSpacing = addonTable.Utilities.GetSpacing()
 
   local bagHeight = activeBag:GetHeight() + topSpacing / 2
 
